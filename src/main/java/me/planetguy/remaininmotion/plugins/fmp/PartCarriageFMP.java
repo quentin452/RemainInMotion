@@ -74,13 +74,13 @@ public class PartCarriageFMP extends McBlockPart implements JNormalOcclusion, IC
 	@Optional.Method(modid = "ForgeMultipart")
 	@Override
 	public Iterable<Cuboid6> getOcclusionBoxes() {
-		return EmptyIterator.instance;
+		return (Iterable<Cuboid6>) EmptyIterator.instance;
 	}
 
 	@Override
 	@Optional.Method(modid = "ForgeMultipart")
 	public Iterable<Cuboid6> getCollisionBoxes() {
-		return new SingleIterator(Cuboid6.full);
+		return (Iterable<Cuboid6>) new SingleIterator(Cuboid6.full);
 	}
 
 	@Optional.Method(modid = "ForgeMultipart")
@@ -209,9 +209,9 @@ public class PartCarriageFMP extends McBlockPart implements JNormalOcclusion, IC
 	public ItemStack pickItem(MovingObjectPosition hit) {
 		return new ItemStack(FMPCarriagePlugin.hollowCarriage);
 	}
-	
+
 	public Iterable<ItemStack> getDrops() {
-		return new SingleIterator(pickItem(null));
+		return (Iterable<ItemStack>) new SingleIterator(pickItem(null));
 	}
 
 }

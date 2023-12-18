@@ -16,25 +16,25 @@ import me.planetguy.remaininmotion.network.PacketCarriageUpdate;
 public class GuiDriveCommon extends GuiPrefab implements ITooltipDrawer {
 
 	public boolean initialized=false;
-	
+
 	private static ResourceLocation rl=new ResourceLocation(ModRiM.Handle+":textures/gui/container/disposer.png");
-	
+
 	public TileEntityCarriageDrive cde;
-	
+
 	protected int buttonID=0;
 
 	protected long state=0;
-	
+
 	private List<String> deferredTooltipLines;
 
     // TODO make a fucking gui for elevator mode
-	
+
 	public GuiDriveCommon(InventoryPlayer playerInv, TileEntity te) {
 		super(new ContainerDrive(playerInv, te), rl);
 		cde=(TileEntityCarriageDrive) te;
 		stateFromTE(cde);
 	}
-	
+
 	public void stateFromTE(TileEntityCarriageDrive te){
         // reset just to be sure
         state = 0;
@@ -51,7 +51,7 @@ public class GuiDriveCommon extends GuiPrefab implements ITooltipDrawer {
 		if(!te.isAnchored)
 			state=state|(1<<(3+Buttons.MOVE_WITH_CARRIAGE.ordinal()));
 	}
-	
+
 	public void stateToButtons(){
 		for(GuiButton b: (List<GuiButton>) this.buttonList){
 			if(b instanceof IconButton){
@@ -59,7 +59,7 @@ public class GuiDriveCommon extends GuiPrefab implements ITooltipDrawer {
 			}
 		}
 	}
-	
+
 	public void stateFromButtons(){
         //reset just to be sure
         state = 0;
@@ -69,21 +69,21 @@ public class GuiDriveCommon extends GuiPrefab implements ITooltipDrawer {
 			}
 		}
 	}
-	
+
 	@Override
 	public String getLabel() {
 		return "Carriage Drive";
 	}
-	
-	public void initGui(){		
+
+	public void initGui(){
 		super.initGui();
-		
+
 		createButton(-81, -60, Buttons.SCREWDRIVER_MODE);
 		createButton(-59, -60, Buttons.CONTINUOUS_MODE);
         createButton(-14, -60, Buttons.ZERO_COOLDOWN);
 		createAnchorButton();
-		
-		
+
+
 		createButton(-59, -31, Buttons.NORTH);
 		createButton(-37, -31, Buttons.DOWN);
 		createButton(-81, -9, Buttons.WEST);
@@ -92,21 +92,21 @@ public class GuiDriveCommon extends GuiPrefab implements ITooltipDrawer {
 		createButton(-59, 13, Buttons.SOUTH);
 		stateToButtons();
 	}
-	
+
 	protected void createAnchorButton(){
 		createButton(-37, -60, Buttons.MOVE_WITH_CARRIAGE);
 	}
-	
+
 	protected void createButton(int x, int y, Buttons button){
 		buttonList.add(new IconButton(buttonID++, width/2 + x, height/2 + y, ((state & (1L<<button.ordinal()))!=0), button, this));
 	}
-	
-	
+
+
 	public boolean handle(IconButton b){
 		b.isActive=!b.isActive;
 		return true;
 	}
-	
+
     protected void actionPerformed(GuiButton b) {
     	if(b instanceof IconButton)
     		handle((IconButton) b);
@@ -124,17 +124,22 @@ public class GuiDriveCommon extends GuiPrefab implements ITooltipDrawer {
 			PacketCarriageUpdate.send(cde, state);
 		}
 	}
-    
+
 	@Override
 	protected void drawGuiContainerForegroundLayer(int param1, int param2) {
 		FontRenderer fr=Minecraft.getMinecraft().fontRenderer;
 		//draw text and stuff here
 		//the parameters for drawString are: string, x, y, color
 		fr.drawString(getLabel(), 8, 6, 4210752);
-		
+
 		initialized=true;
 	}
-	
+
+    @Override
+    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+
+    }
+
     public void drawScreen(int mouseX, int mouseY, float p_73863_3_) {
         deferredTooltipLines=null;
         super.drawScreen(mouseX, mouseY, p_73863_3_);
